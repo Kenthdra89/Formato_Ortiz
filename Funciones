@@ -1,0 +1,26 @@
+CREATE FUNCTION ObtenerTotalPedidosCliente(cliente_id INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE total_pedidos INT;
+
+    SELECT COUNT(*) INTO total_pedidos
+    FROM PEDIDOS
+    WHERE ID_Cliente = cliente_id;
+
+    RETURN total_pedidos;
+END; 
+
+CREATE FUNCTION ObtenerPrecioTotalPedido(pedido_id INT)
+RETURNS DECIMAL(10,2)
+READS SQL DATA
+BEGIN
+    DECLARE precio_total DECIMAL(10,2);
+
+    SELECT SUM(P.Precio * DP.Cantidad) INTO precio_total
+    FROM DETALLES_DE_PEDIDO DP
+    JOIN PRODUCTOS P ON DP.ID_Producto = P.ID_Producto
+    WHERE DP.ID_Pedido = pedido_id;
+
+    RETURN precio_total;
+END;
